@@ -6,7 +6,7 @@ const M_LOGO = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAAD0eN
 const T = {
   de: {
     lang: "DE",
-    nav: ["Leistungen", "Warum Serbien", "Ablauf", "FAQ", "Kontakt"],
+    nav: ["Leistungen", "Warum Serbien", "Preise", "FAQ", "Kontakt"],
     navCTA: "Gespräch buchen",
     heroEyebrow: "RELOCATION · COMPANY · RESIDENCE",
     heroH1a: "Ihr Neustart",
@@ -66,7 +66,7 @@ const T = {
   },
   en: {
     lang: "EN",
-    nav: ["Services", "Why Serbia", "Process", "FAQ", "Contact"],
+    nav: ["Services", "Why Serbia", "Prices", "FAQ", "Contact"],
     navCTA: "Book a Call",
     heroEyebrow: "RELOCATION · COMPANY · RESIDENCE",
     heroH1a: "Your Fresh Start",
@@ -192,7 +192,7 @@ function Navbar({ t, lang, setLang }) {
     return () => window.removeEventListener("scroll", fn);
   }, []);
   useEffect(() => { if (!isNavMobile) setMenuOpen(false); }, [isNavMobile]);
-  const ids = ["leistungen","warum","ablauf","faq","kontakt"];
+  const ids = ["leistungen","warum","/kaufen","faq","kontakt"];
   return (
     <nav style={{
       position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
@@ -225,7 +225,7 @@ function Navbar({ t, lang, setLang }) {
         ) : (
           <div style={{ display: "flex", gap: 28, alignItems: "center" }}>
             {t.nav.map((l, i) => (
-              <a key={l} href={"#" + ids[i]} style={{ color: "#777", textDecoration: "none", fontSize: 13, letterSpacing: 0.3, fontFamily: sans, transition: "color 0.2s" }}
+              <a key={l} href={ids[i].startsWith("/") ? ids[i] : "#" + ids[i]} style={{ color: "#777", textDecoration: "none", fontSize: 13, letterSpacing: 0.3, fontFamily: sans, transition: "color 0.2s" }}
                 onMouseEnter={e => e.target.style.color = gold} onMouseLeave={e => e.target.style.color = "#777"}>{l}</a>
             ))}
             <LangToggle lang={lang} setLang={setLang} />
@@ -240,7 +240,7 @@ function Navbar({ t, lang, setLang }) {
       {isNavMobile && menuOpen && (
         <div style={{ borderTop: "1px solid #1a1a1a", padding: "20px 0 28px" }}>
           {t.nav.map((l, i) => (
-            <a key={l} href={"#" + ids[i]} onClick={() => setMenuOpen(false)}
+            <a key={l} href={ids[i].startsWith("/") ? ids[i] : "#" + ids[i]} onClick={() => setMenuOpen(false)}
               style={{ display: "block", color: "#888", textDecoration: "none", fontSize: 15, fontFamily: sans, padding: "12px 0", borderBottom: "1px solid #111" }}>
               {l}
             </a>
@@ -371,34 +371,59 @@ function ServicesSection({ t }) {
 }
 
 // ─── PROCESS ─────────────────────────────────────────────────────────────────
-function ProcessSection({ t }) {
-  const { isMobile, isTablet } = useBreakpoint();
-  const cols = isMobile ? "repeat(2,1fr)" : isTablet ? "repeat(2,1fr)" : "repeat(4,1fr)";
+function PricingCTA({ t }) {
+  const { isMobile } = useBreakpoint();
+  const isDE = t.lang === "de";
+  const packages = [
+    { label: isDE ? "Gesamtpaket" : "Full Package", price: "486.642 RSD", sub: isDE ? "Firma + Aufenthaltstitel" : "Company + Residence", highlight: true },
+    { label: isDE ? "Firmengründung" : "Company Formation", price: "371.408 RSD", sub: "d.o.o.", highlight: false },
+    { label: isDE ? "Aufenthaltstitel" : "Residence Permit", price: "163.899 RSD", sub: isDE ? "Temporäre Boravak" : "Temporary Boravak", highlight: false },
+    { label: isDE ? "Add. Shareholder" : "Add. Shareholder", price: "43.887 RSD", sub: isDE ? "Weiterer Gesellschafter" : "Additional partner", highlight: false },
+  ];
   return (
-    <section id="ablauf" style={{ background: "#0c0c0c", padding: isMobile ? "80px 5vw" : "120px 5vw" }}>
+    <section id="preise" style={{ background: "#0c0c0c", padding: isMobile ? "80px 5vw" : "120px 5vw" }}>
       <div style={{ maxWidth: 1200, margin: "0 auto" }}>
         <FadeIn>
-          <div style={{ textAlign: "center", marginBottom: isMobile ? 48 : 80 }}>
-            <div style={{ color: gold, fontSize: 11, letterSpacing: 4, fontFamily: sans, marginBottom: 14, textTransform: "uppercase" }}>{t.processEyebrow}</div>
-            <h2 style={{ fontFamily: sans, fontSize: "clamp(28px,4vw,52px)", fontWeight: 800, color: cream, margin: 0, letterSpacing: -1.2 }}>{t.processH2}</h2>
+          <div style={{ textAlign: "center", marginBottom: isMobile ? 48 : 72 }}>
+            <div style={{ color: gold, fontSize: 11, letterSpacing: 4, fontFamily: sans, marginBottom: 14, textTransform: "uppercase" }}>
+              {isDE ? "PREISE" : "PRICING"}
+            </div>
+            <h2 style={{ fontFamily: sans, fontSize: "clamp(28px,4vw,52px)", fontWeight: 800, color: cream, margin: "0 0 20px", letterSpacing: -1.2 }}>
+              {isDE ? "Transparent. Einmalig. Fair." : "Transparent. One-time. Fair."}
+            </h2>
+            <p style={{ color: muted, fontFamily: sans, fontSize: 16, lineHeight: 1.7, maxWidth: 520, margin: "0 auto" }}>
+              {isDE ? "Keine versteckten Kosten. Einmalige Zahlung, keine Abos." : "No hidden fees. One-time payment, no subscriptions."}
+            </p>
           </div>
         </FadeIn>
-        <div style={{ display: "grid", gridTemplateColumns: cols, gap: isMobile ? 32 : 0, position: "relative" }}>
-          {!isMobile && !isTablet && (
-            <div style={{ position: "absolute", top: 31, left: "12.5%", right: "12.5%", height: 1, background: `linear-gradient(90deg,transparent,rgba(195,151,90,0.25) 20%,rgba(195,151,90,0.25) 80%,transparent)` }} />
-          )}
-          {t.steps.map((s, i) => (
-            <FadeIn key={s.num} delay={i * 110}>
-              <div style={{ padding: isMobile ? "0 12px" : "0 20px", textAlign: "center" }}>
-                <div style={{ width: 62, height: 62, borderRadius: "50%", border: `1px solid rgba(195,151,90,0.35)`, background: "#0c0c0c", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 26px", position: "relative" }}>
-                  <span style={{ color: gold, fontWeight: 800, fontSize: 13, fontFamily: sans }}>{s.num}</span>
-                </div>
-                <h3 style={{ color: cream, fontFamily: sans, fontWeight: 700, fontSize: 17, margin: "0 0 10px" }}>{s.title}</h3>
-                <p style={{ color: "#555", fontFamily: sans, fontSize: 13, lineHeight: 1.7, margin: 0 }}>{s.desc}</p>
+        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(4,1fr)", gap: 1, background: "#1a1a1a", marginBottom: 48 }}>
+          {packages.map((p, i) => (
+            <FadeIn key={p.label} delay={i * 70}>
+              <div style={{ padding: isMobile ? "24px 16px" : "36px 28px", background: p.highlight ? "#0f0f0b" : "#0c0c0c", textAlign: "center" }}>
+                {p.highlight && (
+                  <div style={{ color: gold, fontSize: 10, letterSpacing: 2, fontFamily: sans, marginBottom: 10, textTransform: "uppercase" }}>
+                    ★ {isDE ? "Beliebt" : "Popular"}
+                  </div>
+                )}
+                <div style={{ fontFamily: sans, fontWeight: 800, fontSize: isMobile ? 16 : 20, color: cream, marginBottom: 6 }}>{p.label}</div>
+                <div style={{ fontFamily: sans, fontWeight: 900, fontSize: isMobile ? 18 : 22, color: gold, marginBottom: 6, letterSpacing: -0.5 }}>{p.price}</div>
+                <div style={{ fontFamily: sans, fontSize: 12, color: muted }}>{p.sub}</div>
               </div>
             </FadeIn>
           ))}
         </div>
+        <FadeIn>
+          <div style={{ textAlign: "center" }}>
+            <a href="/kaufen" style={{
+              display: "inline-block",
+              background: `linear-gradient(135deg, ${gold}, #f8f0a7 50%, ${gold})`, backgroundSize: "200%",
+              color: "#0a0a0a", padding: "16px 48px", borderRadius: 4,
+              fontFamily: sans, fontWeight: 800, fontSize: 16, textDecoration: "none", letterSpacing: 0.3,
+            }}>
+              {isDE ? "Jetzt buchen & bezahlen →" : "Book & pay now →"}
+            </a>
+          </div>
+        </FadeIn>
       </div>
     </section>
   );
@@ -507,7 +532,7 @@ export default function App() {
       <Hero t={t} />
       <WhySection t={t} />
       <ServicesSection t={t} />
-      <ProcessSection t={t} />
+      <PricingCTA t={t} />
       <FAQSection t={t} />
       <ContactSection t={t} />
       <Footer t={t} />
