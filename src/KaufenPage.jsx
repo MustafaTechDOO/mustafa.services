@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 const gold = "#c3975a";
@@ -171,12 +171,22 @@ function ProductCard({ product, onBuy, loading }) {
 export default function KaufenPage() {
   const [loading, setLoading] = useState(null);
   const [error, setError] = useState(null);
+  const [activeProduct, setActiveProduct] = useState(null);
+  const [checkoutInstance, setCheckoutInstance] = useState(null);
+  const widgetRef = useRef(null);
   const revolutReady = useRevolutScript();
   const navigate = useNavigate();
 
+  // Destroy old widget when switching products
+  useEffect(() => {
+    return () => { if (checkoutInstance) checkoutInstance.destroy(); };
+  }, [checkoutInstance]);
+
   const handleBuy = useCallback(async (productId) => {
     if (!revolutReady) { setError("Checkout wird noch geladen. Bitte kurz warten."); return; }
+    if (checkoutInstance) { checkoutInstance.destroy(); setCheckoutInstance(null); }
     setLoading(productId);
+    setActiveProduct(productId);
     setError(null);
 
     try {
@@ -189,23 +199,24 @@ export default function KaufenPage() {
       if (!res.ok || !data.publicId) throw new Error(data.error || "Order konnte nicht erstellt werden.");
 
       const checkout = await window.RevolutCheckout(data.publicId, "prod");
-      checkout.payWithPopup({
-        onSuccess() {
-          navigate("/danke");
-        },
-        onError(msg) {
-          setError("Zahlung fehlgeschlagen: " + msg);
-        },
-        onCancel() {
-          setLoading(null);
-        },
-      });
+      setCheckoutInstance(checkout);
+
+      // Small delay so the widget container is in the DOM
+      setTimeout(() => {
+        checkout.payWithWidget({
+          target: widgetRef.current,
+          onSuccess() { navigate("/danke"); },
+          onError(msg) { setError("Zahlung fehlgeschlagen: " + (msg || "Unbekannter Fehler")); setActiveProduct(null); },
+          onCancel() { setActiveProduct(null); checkout.destroy(); },
+        });
+      }, 50);
     } catch (err) {
       setError(err.message);
+      setActiveProduct(null);
     } finally {
       setLoading(null);
     }
-  }, [revolutReady, navigate]);
+  }, [revolutReady, navigate, checkoutInstance]);
 
   return (
     <div style={{ background: bg, minHeight: "100vh", fontFamily: sans }}>
@@ -256,10 +267,34 @@ export default function KaufenPage() {
           ))}
         </div>
 
+        {/* Inline checkout widget */}
+        {activeProduct && (
+          <div style={{ maxWidth: 560, margin: "0 auto 60px", padding: "0 5vw" }}>
+            <div style={{
+              background: surface, border: `1px solid rgba(195,151,90,0.3)`,
+              borderRadius: 6, overflow: "hidden",
+            }}>
+              <div style={{ padding: "20px 24px 16px", borderBottom: "1px solid #1a1a1a", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div>
+                  <div style={{ color: cream, fontFamily: sans, fontWeight: 700, fontSize: 16 }}>
+                    {PRODUCTS.find(p => p.id === activeProduct)?.title}
+                  </div>
+                  <div style={{ color: gold, fontFamily: sans, fontSize: 13, marginTop: 2 }}>
+                    {formatRSD(PRODUCTS.find(p => p.id === activeProduct)?.priceRSD)} · {formatEUR(PRODUCTS.find(p => p.id === activeProduct)?.priceRSD)}
+                  </div>
+                </div>
+                <button onClick={() => { setActiveProduct(null); if (checkoutInstance) checkoutInstance.destroy(); }}
+                  style={{ background: "none", border: "none", color: muted, cursor: "pointer", fontSize: 20, lineHeight: 1 }}>×</button>
+              </div>
+              <div ref={widgetRef} style={{ minHeight: 200 }} />
+            </div>
+          </div>
+        )}
+
         {/* Error */}
         {error && (
           <div style={{
-            maxWidth: 560, margin: "-60px auto 60px", padding: "16px 24px",
+            maxWidth: 560, margin: "-20px auto 60px", padding: "16px 24px",
             background: "rgba(220,50,50,0.1)", border: "1px solid rgba(220,50,50,0.3)",
             borderRadius: 4, color: "#e88", fontFamily: sans, fontSize: 14, textAlign: "center",
           }}>
