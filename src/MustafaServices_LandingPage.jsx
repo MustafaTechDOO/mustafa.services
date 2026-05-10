@@ -229,7 +229,7 @@ function Navbar({ t, lang, setLang }) {
                 onMouseEnter={e => e.target.style.color = gold} onMouseLeave={e => e.target.style.color = "#777"}>{l}</a>
             ))}
             <LangToggle lang={lang} setLang={setLang} />
-            <a href="#kontakt" style={{
+            <a href="/kaufen" style={{
               background: `linear-gradient(135deg, ${gold}, #f8f0a7 50%, ${gold})`, backgroundSize: "200%",
               color: "#0a0a0a", padding: "10px 22px", borderRadius: 4, fontWeight: 700, fontSize: 13,
               letterSpacing: 0.5, textDecoration: "none", fontFamily: sans, whiteSpace: "nowrap",
@@ -245,7 +245,7 @@ function Navbar({ t, lang, setLang }) {
               {l}
             </a>
           ))}
-          <a href="#kontakt" onClick={() => setMenuOpen(false)} style={{
+          <a href="/kaufen" onClick={() => setMenuOpen(false)} style={{
             display: "block", marginTop: 20,
             background: `linear-gradient(135deg, ${gold}, #f8f0a7 50%, ${gold})`, backgroundSize: "200%",
             color: "#0a0a0a", padding: "14px 22px", borderRadius: 4, fontWeight: 700, fontSize: 14,
