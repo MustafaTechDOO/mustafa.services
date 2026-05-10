@@ -53,9 +53,28 @@ export default function ImpressumPage() {
 
         <Section title="Anbieter">
           <P>
-            <strong style={{ color: cream }}>Mustafa Fiedelsberger</strong><br />
-            Mustafa-Services.com<br />
-            Belgrad, Serbien
+            <strong style={{ color: cream }}>Mustafa-Services</strong> ist eine Marke von:
+          </P>
+          <P>
+            <strong style={{ color: cream }}>MUSTAFA TECH VCC</strong><br />
+            (Дружество с променлив капитал / Variable Capital Company)<br />
+            бул. Цариградско Шосе 115M, Сграда Д, 1F<br />
+            жк. Полигона, р-н Младост<br />
+            1784 София, Булгарие<br />
+            <br />
+            EIK: 208694781<br />
+            UID (MwSt.): BG208694781
+          </P>
+          <P>
+            sowie
+          </P>
+          <P>
+            <strong style={{ color: cream }}>MUSTAFA.TECH DOO BEOGRAD</strong><br />
+            Takovska 47/3<br />
+            11108 Beograd-Palilula, Serbien<br />
+            <br />
+            MB: 22166921<br />
+            PIB: 115501333
           </P>
           <P>
             E-Mail: <a href="mailto:mustafa@mustafa-services.com" style={{ color: gold, textDecoration: "none" }}>mustafa@mustafa-services.com</a>
@@ -64,7 +83,7 @@ export default function ImpressumPage() {
 
         <Section title="Inhaltlich verantwortlich">
           <P>
-            Mustafa Fiedelsberger (Anschrift wie oben)
+            Mustafa Fiedelsberger – MUSTAFA TECH VCC (Anschrift wie oben)
           </P>
         </Section>
 
