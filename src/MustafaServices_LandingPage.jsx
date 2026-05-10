@@ -134,7 +134,7 @@ function useBreakpoint() {
     window.addEventListener("resize", fn);
     return () => window.removeEventListener("resize", fn);
   }, []);
-  return { isMobile: w < 640, isTablet: w < 1024 };
+  return { isMobile: w < 640, isTablet: w < 1024, isNavMobile: w < 960 };
 }
 
 function useInView(threshold = 0.12) {
@@ -185,13 +185,13 @@ function LangToggle({ lang, setLang }) {
 function Navbar({ t, lang, setLang }) {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const { isMobile } = useBreakpoint();
+  const { isNavMobile } = useBreakpoint();
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 40);
     window.addEventListener("scroll", fn);
     return () => window.removeEventListener("scroll", fn);
   }, []);
-  useEffect(() => { if (!isMobile) setMenuOpen(false); }, [isMobile]);
+  useEffect(() => { if (!isNavMobile) setMenuOpen(false); }, [isNavMobile]);
   const ids = ["leistungen","warum","ablauf","faq","kontakt"];
   return (
     <nav style={{
@@ -208,7 +208,7 @@ function Navbar({ t, lang, setLang }) {
             Mustafa<span style={{ color: gold }}>.</span>Services
           </span>
         </a>
-        {isMobile ? (
+        {isNavMobile ? (
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             <LangToggle lang={lang} setLang={setLang} />
             <button onClick={() => setMenuOpen(o => !o)} style={{ background: "none", border: "none", cursor: "pointer", padding: 6, display: "flex", flexDirection: "column", gap: 5 }}>
@@ -237,7 +237,7 @@ function Navbar({ t, lang, setLang }) {
           </div>
         )}
       </div>
-      {isMobile && menuOpen && (
+      {isNavMobile && menuOpen && (
         <div style={{ borderTop: "1px solid #1a1a1a", padding: "20px 0 28px" }}>
           {t.nav.map((l, i) => (
             <a key={l} href={"#" + ids[i]} onClick={() => setMenuOpen(false)}
