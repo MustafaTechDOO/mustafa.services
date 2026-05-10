@@ -1,23 +1,23 @@
-// Revolut amounts are in minor units (para = 1/100 RSD)
+// Amounts in EUR cents (RSD / 117, rounded)
 const PRODUCTS = {
   firma: {
-    amount: 37140800, // 371.408 RSD × 100
-    currency: "RSD",
+    amount: 317400, // 3.174 EUR (= 371.408 RSD / 117)
+    currency: "EUR",
     description: "Firmengründung d.o.o. – Mustafa-Services.com",
   },
   aufenthalt: {
-    amount: 16389900, // 163.899 RSD × 100
-    currency: "RSD",
+    amount: 140100, // 1.401 EUR (= 163.899 RSD / 117)
+    currency: "EUR",
     description: "Aufenthaltstitel Serbien – Mustafa-Services.com",
   },
   shareholder: {
-    amount: 4388700, // 43.887 RSD × 100
-    currency: "RSD",
+    amount: 37500, // 375 EUR (= 43.887 RSD / 117)
+    currency: "EUR",
     description: "Additional Shareholder – Mustafa-Services.com",
   },
   paket: {
-    amount: 48664200, // 486.642 RSD × 100
-    currency: "RSD",
+    amount: 415900, // 4.159 EUR (= 486.642 RSD / 117)
+    currency: "EUR",
     description: "Gesamtpaket (Firma + Aufenthaltstitel) – Mustafa-Services.com",
   },
 };
