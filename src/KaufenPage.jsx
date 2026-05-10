@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback } from "react";
 
 const gold = "#c3975a";
 const cream = "#EDEAE3";
@@ -79,18 +79,6 @@ function formatEUR(amount) {
   return "≈ " + new Intl.NumberFormat("de-DE", { maximumFractionDigits: 0 }).format(Math.round(amount / EUR_RATE)) + " €";
 }
 
-function useRevolutScript() {
-  const [ready, setReady] = useState(false);
-  useEffect(() => {
-    if (window.RevolutCheckout) { setReady(true); return; }
-    const script = document.createElement("script");
-    script.src = "https://merchant.revolut.com/embed.js";
-    script.async = true;
-    script.onload = () => setReady(true);
-    document.head.appendChild(script);
-  }, []);
-  return ready;
-}
 
 function ProductCard({ product, onBuy, loading }) {
   const isLoading = loading === product.id;
@@ -167,15 +155,11 @@ function ProductCard({ product, onBuy, loading }) {
   );
 }
 
-const BASE_URL = "https://mustafa-services.com";
-
 export default function KaufenPage() {
   const [loading, setLoading] = useState(null);
   const [error, setError] = useState(null);
-  const revolutReady = useRevolutScript();
 
   const handleBuy = useCallback(async (productId) => {
-    if (!revolutReady) { setError("Checkout wird noch geladen. Bitte kurz warten."); return; }
     setLoading(productId);
     setError(null);
 
@@ -188,17 +172,13 @@ export default function KaufenPage() {
       const data = await res.json();
       if (!res.ok || !data.publicId) throw new Error(data.error || "Order konnte nicht erstellt werden.");
 
-      const checkout = await window.RevolutCheckout(data.publicId, "prod");
-      checkout.payWithRedirect({
-        successUrl: `${BASE_URL}/danke`,
-        cancelUrl:  `${BASE_URL}/kaufen`,
-        failUrl:    `${BASE_URL}/kaufen?error=1`,
-      });
+      if (!data.checkoutUrl) throw new Error("Keine Checkout-URL erhalten.");
+      window.location.href = data.checkoutUrl;
     } catch (err) {
       setError(err.message);
       setLoading(null);
     }
-  }, [revolutReady]);
+  }, []);
 
   return (
     <div style={{ background: bg, minHeight: "100vh", fontFamily: sans }}>

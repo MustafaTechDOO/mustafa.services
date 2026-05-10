@@ -74,7 +74,11 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: "Invalid Revolut response", details: data });
     }
 
-    return res.status(200).json({ publicId: data.public_id, orderId: data.id });
+    return res.status(200).json({
+      publicId: data.public_id,
+      orderId: data.id,
+      checkoutUrl: data.checkout_url,
+    });
   } catch (err) {
     console.error("create-order fetch error:", err);
     return res.status(500).json({ error: err.message || "Internal server error" });
