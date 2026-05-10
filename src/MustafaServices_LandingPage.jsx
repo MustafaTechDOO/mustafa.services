@@ -18,8 +18,7 @@ const T = {
     stat2val: "2–4 Wo.", stat2label: "Firmengründung",
     stat3val: "100%", stat3label: "Auf Deutsch",
     whyEyebrow: "WARUM SERBIEN",
-    whyH2: "Das Beste aus Europa –
-außerhalb der EU.",
+    whyH2: "Das Beste aus Europa –\naußerhalb der EU.",
     whyPoints: [
       { icon: "💰", title: "15% Flat Tax", desc: "Einer der niedrigsten Unternehmenssteuersätze Europas. Kein Solidaritätszuschlag, keine Gewerbesteuer." },
       { icon: "🇷🇸", title: "Nicht EU", desc: "Kein Digital-Euro, eigene Währung, eigene Regeln. Mehr Freiheit, weniger Bürokratie." },
@@ -80,8 +79,7 @@ Ihren Neustart?",
     stat2val: "2–4 wks", stat2label: "Company Setup",
     stat3val: "100%", stat3label: "In English",
     whyEyebrow: "WHY SERBIA",
-    whyH2: "The best of Europe –
-outside the EU.",
+    whyH2: "The best of Europe –\noutside the EU.",
     whyPoints: [
       { icon: "💰", title: "15% Flat Tax", desc: "One of the lowest corporate tax rates in Europe. No solidarity surcharge, no trade tax." },
       { icon: "🇷🇸", title: "Not EU", desc: "No digital euro, own currency, own rules. More freedom, less bureaucracy." },
