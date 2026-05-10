@@ -465,8 +465,31 @@ function ContactSection({ t }) {
   const [email, setEmail] = useState("");
   const [msg, setMsg] = useState("");
   const [sent, setSent] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const { isMobile } = useBreakpoint();
   const inp = { width: "100%", background: surface, border: "1px solid #222", color: cream, padding: "14px 16px", borderRadius: 4, fontFamily: sans, fontSize: 14, outline: "none", boxSizing: "border-box", transition: "border-color 0.25s" };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, message: msg }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Fehler beim Senden.");
+      setSent(true);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <section id="kontakt" style={{ background: "#0c0c0c", padding: isMobile ? "80px 5vw" : "120px 5vw" }}>
       <div style={{ maxWidth: 1200, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: isMobile ? 48 : 80, alignItems: "start" }}>
@@ -493,11 +516,14 @@ function ContactSection({ t }) {
               <p style={{ color: muted, fontFamily: sans, fontSize: 14 }}>{t.successSub}</p>
             </div>
           ) : (
-            <form onSubmit={e => { e.preventDefault(); setSent(true); }} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+            <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
               <input value={name} onChange={e => setName(e.target.value)} placeholder={t.inputName} required style={inp} onFocus={e => e.target.style.borderColor = "rgba(195,151,90,0.45)"} onBlur={e => e.target.style.borderColor = "#222"} />
               <input value={email} onChange={e => setEmail(e.target.value)} type="email" placeholder={t.inputEmail} required style={inp} onFocus={e => e.target.style.borderColor = "rgba(195,151,90,0.45)"} onBlur={e => e.target.style.borderColor = "#222"} />
               <textarea value={msg} onChange={e => setMsg(e.target.value)} placeholder={t.inputMsg} rows={5} style={{ ...inp, resize: "vertical" }} onFocus={e => e.target.style.borderColor = "rgba(195,151,90,0.45)"} onBlur={e => e.target.style.borderColor = "#222"} />
-              <button type="submit" style={{ background: `linear-gradient(135deg,${gold},#f8f0a7 50%,${gold})`, backgroundSize: "200%", color: "#0a0a0a", padding: "15px", border: "none", borderRadius: 4, fontWeight: 800, fontSize: 14, cursor: "pointer", fontFamily: sans, letterSpacing: 0.3 }}>{t.submitCTA}</button>
+              {error && <div style={{ color: "#e88", fontFamily: sans, fontSize: 13 }}>{error}</div>}
+              <button type="submit" disabled={loading} style={{ background: `linear-gradient(135deg,${gold},#f8f0a7 50%,${gold})`, backgroundSize: "200%", color: "#0a0a0a", padding: "15px", border: "none", borderRadius: 4, fontWeight: 800, fontSize: 14, cursor: loading ? "wait" : "pointer", fontFamily: sans, letterSpacing: 0.3, opacity: loading ? 0.7 : 1 }}>
+                {loading ? "Wird gesendet…" : t.submitCTA}
+              </button>
             </form>
           )}
         </FadeIn>
@@ -516,7 +542,11 @@ function Footer({ t }) {
           <span style={{ fontFamily: sans, fontWeight: 700, fontSize: 15, color: cream }}>Mustafa<span style={{ color: gold }}>-</span>Services</span>
         </div>
         <div style={{ color: "#333", fontFamily: sans, fontSize: 11, letterSpacing: 2 }}>{t.footerTagline}</div>
-        <div style={{ color: "#2e2e2e", fontFamily: sans, fontSize: 11 }}>© {new Date().getFullYear()} Mustafa-Services.com</div>
+        <div style={{ display: "flex", gap: 20, alignItems: "center", flexWrap: "wrap" }}>
+          <a href="/impressum" style={{ color: "#2e2e2e", fontFamily: sans, fontSize: 11, textDecoration: "none" }}>Impressum</a>
+          <a href="/datenschutz" style={{ color: "#2e2e2e", fontFamily: sans, fontSize: 11, textDecoration: "none" }}>Datenschutz</a>
+          <span style={{ color: "#2e2e2e", fontFamily: sans, fontSize: 11 }}>© {new Date().getFullYear()} Mustafa-Services.com</span>
+        </div>
       </div>
     </footer>
   );

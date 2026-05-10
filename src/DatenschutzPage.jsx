@@ -147,7 +147,10 @@ export default function DatenschutzPage() {
       <footer style={{ borderTop: "1px solid #111", padding: "32px 5vw" }}>
         <div style={{ maxWidth: 1200, margin: "0 auto", display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
           <span style={{ fontFamily: sans, fontSize: 13, color: "#2e2e2e" }}>© {new Date().getFullYear()} Mustafa-Services.com</span>
-          <a href="/kaufen" style={{ fontFamily: sans, fontSize: 13, color: gold, textDecoration: "none" }}>Preise & Buchung</a>
+          <div style={{ display: "flex", gap: 20 }}>
+            <a href="/impressum" style={{ fontFamily: sans, fontSize: 13, color: muted, textDecoration: "none" }}>Impressum</a>
+            <a href="/kaufen" style={{ fontFamily: sans, fontSize: 13, color: gold, textDecoration: "none" }}>Preise & Buchung</a>
+          </div>
         </div>
       </footer>
     </div>

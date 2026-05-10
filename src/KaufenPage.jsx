@@ -242,12 +242,19 @@ export default function KaufenPage() {
 
         {/* Trust row */}
         <div style={{ borderTop: "1px solid #111", padding: "40px 5vw" }}>
-          <div style={{ maxWidth: 1200, margin: "0 auto", display: "flex", justifyContent: "center", gap: 48, flexWrap: "wrap" }}>
+          <div style={{ maxWidth: 1200, margin: "0 auto", display: "flex", justifyContent: "center", gap: 48, flexWrap: "wrap", marginBottom: 32 }}>
             {[["🔒", "SSL-verschlüsselt"], ["🏦", "Revolut Checkout"], ["📞", "Support auf Deutsch"], ["✅", "Rückfragen vor Kauf"]].map(([icon, label]) => (
               <div key={label} style={{ display: "flex", alignItems: "center", gap: 8, color: muted, fontFamily: sans, fontSize: 13 }}>
                 <span>{icon}</span><span>{label}</span>
               </div>
             ))}
+          </div>
+          <div style={{ maxWidth: 1200, margin: "0 auto", display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
+            <span style={{ fontFamily: sans, fontSize: 12, color: "#2e2e2e" }}>© {new Date().getFullYear()} Mustafa-Services.com</span>
+            <div style={{ display: "flex", gap: 20 }}>
+              <a href="/impressum" style={{ fontFamily: sans, fontSize: 12, color: muted, textDecoration: "none" }}>Impressum</a>
+              <a href="/datenschutz" style={{ fontFamily: sans, fontSize: 12, color: muted, textDecoration: "none" }}>Datenschutz</a>
+            </div>
           </div>
         </div>
       </div>

@@ -5,6 +5,7 @@ import App from "./MustafaServices_LandingPage.jsx";
 import KaufenPage from "./KaufenPage.jsx";
 import DankePage from "./DankePage.jsx";
 import DatenschutzPage from "./DatenschutzPage.jsx";
+import ImpressumPage from "./ImpressumPage.jsx";
 import CookieBanner, { useAnalyticsConsent } from "./CookieBanner.jsx";
 
 function Root() {
@@ -16,6 +17,7 @@ function Root() {
         <Route path="/kaufen" element={<KaufenPage />} />
         <Route path="/danke" element={<DankePage />} />
         <Route path="/datenschutz" element={<DatenschutzPage />} />
+        <Route path="/impressum" element={<ImpressumPage />} />
       </Routes>
       <CookieBanner />
     </>
