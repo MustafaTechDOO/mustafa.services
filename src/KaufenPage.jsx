@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 const gold = "#c3975a";
 const cream = "#EDEAE3";
