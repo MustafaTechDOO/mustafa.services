@@ -127,6 +127,16 @@ const T = {
 };
 
 // ─── HELPERS ────────────────────────────────────────────────────────────────
+function useBreakpoint() {
+  const [w, setW] = useState(typeof window !== "undefined" ? window.innerWidth : 1200);
+  useEffect(() => {
+    const fn = () => setW(window.innerWidth);
+    window.addEventListener("resize", fn);
+    return () => window.removeEventListener("resize", fn);
+  }, []);
+  return { isMobile: w < 640, isTablet: w < 1024 };
+}
+
 function useInView(threshold = 0.12) {
   const ref = useRef(null);
   const [inView, setInView] = useState(false);
@@ -174,17 +184,20 @@ function LangToggle({ lang, setLang }) {
 // ─── NAVBAR ─────────────────────────────────────────────────────────────────
 function Navbar({ t, lang, setLang }) {
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const { isMobile } = useBreakpoint();
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 40);
     window.addEventListener("scroll", fn);
     return () => window.removeEventListener("scroll", fn);
   }, []);
+  useEffect(() => { if (!isMobile) setMenuOpen(false); }, [isMobile]);
   const ids = ["leistungen","warum","ablauf","faq","kontakt"];
   return (
     <nav style={{
       position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
-      background: scrolled ? "rgba(8,8,8,0.96)" : "transparent",
-      backdropFilter: scrolled ? "blur(16px)" : "none",
+      background: scrolled || menuOpen ? "rgba(8,8,8,0.98)" : "transparent",
+      backdropFilter: scrolled || menuOpen ? "blur(16px)" : "none",
       borderBottom: scrolled ? `1px solid rgba(195,151,90,0.12)` : "none",
       transition: "all 0.35s ease", padding: "0 5vw",
     }}>
@@ -195,41 +208,74 @@ function Navbar({ t, lang, setLang }) {
             Mustafa<span style={{ color: gold }}>.</span>Services
           </span>
         </a>
-        <div style={{ display: "flex", gap: 28, alignItems: "center" }}>
+        {isMobile ? (
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <LangToggle lang={lang} setLang={setLang} />
+            <button onClick={() => setMenuOpen(o => !o)} style={{ background: "none", border: "none", cursor: "pointer", padding: 6, display: "flex", flexDirection: "column", gap: 5 }}>
+              {[0,1,2].map(i => (
+                <span key={i} style={{
+                  display: "block", width: 24, height: 2, background: gold, borderRadius: 2,
+                  transition: "all 0.3s",
+                  transform: menuOpen ? (i === 0 ? "rotate(45deg) translate(5px,5px)" : i === 2 ? "rotate(-45deg) translate(5px,-5px)" : "scaleX(0)") : "none",
+                  opacity: menuOpen && i === 1 ? 0 : 1,
+                }} />
+              ))}
+            </button>
+          </div>
+        ) : (
+          <div style={{ display: "flex", gap: 28, alignItems: "center" }}>
+            {t.nav.map((l, i) => (
+              <a key={l} href={"#" + ids[i]} style={{ color: "#777", textDecoration: "none", fontSize: 13, letterSpacing: 0.3, fontFamily: sans, transition: "color 0.2s" }}
+                onMouseEnter={e => e.target.style.color = gold} onMouseLeave={e => e.target.style.color = "#777"}>{l}</a>
+            ))}
+            <LangToggle lang={lang} setLang={setLang} />
+            <a href="#kontakt" style={{
+              background: `linear-gradient(135deg, ${gold}, #f8f0a7 50%, ${gold})`, backgroundSize: "200%",
+              color: "#0a0a0a", padding: "10px 22px", borderRadius: 4, fontWeight: 700, fontSize: 13,
+              letterSpacing: 0.5, textDecoration: "none", fontFamily: sans, whiteSpace: "nowrap",
+            }}>{t.navCTA}</a>
+          </div>
+        )}
+      </div>
+      {isMobile && menuOpen && (
+        <div style={{ borderTop: "1px solid #1a1a1a", padding: "20px 0 28px" }}>
           {t.nav.map((l, i) => (
-            <a key={l} href={"#" + ids[i]} style={{ color: "#777", textDecoration: "none", fontSize: 13, letterSpacing: 0.3, fontFamily: sans, transition: "color 0.2s" }}
-              onMouseEnter={e => e.target.style.color = gold} onMouseLeave={e => e.target.style.color = "#777"}>{l}</a>
+            <a key={l} href={"#" + ids[i]} onClick={() => setMenuOpen(false)}
+              style={{ display: "block", color: "#888", textDecoration: "none", fontSize: 15, fontFamily: sans, padding: "12px 0", borderBottom: "1px solid #111" }}>
+              {l}
+            </a>
           ))}
-          <LangToggle lang={lang} setLang={setLang} />
-          <a href="#kontakt" style={{
+          <a href="#kontakt" onClick={() => setMenuOpen(false)} style={{
+            display: "block", marginTop: 20,
             background: `linear-gradient(135deg, ${gold}, #f8f0a7 50%, ${gold})`, backgroundSize: "200%",
-            color: "#0a0a0a", padding: "10px 22px", borderRadius: 4, fontWeight: 700, fontSize: 13,
-            letterSpacing: 0.5, textDecoration: "none", fontFamily: sans, whiteSpace: "nowrap",
+            color: "#0a0a0a", padding: "14px 22px", borderRadius: 4, fontWeight: 700, fontSize: 14,
+            textDecoration: "none", fontFamily: sans, textAlign: "center",
           }}>{t.navCTA}</a>
         </div>
-      </div>
+      )}
     </nav>
   );
 }
 
 // ─── HERO ────────────────────────────────────────────────────────────────────
 function Hero({ t }) {
+  const { isMobile, isTablet } = useBreakpoint();
   return (
-    <section id="top" style={{ minHeight: "100vh", background: bg, display: "flex", alignItems: "center", position: "relative", overflow: "hidden", padding: "120px 5vw 80px" }}>
+    <section id="top" style={{ minHeight: "100vh", background: bg, display: "flex", alignItems: "center", position: "relative", overflow: "hidden", padding: isMobile ? "100px 5vw 60px" : "120px 5vw 80px" }}>
       <div style={{ position: "absolute", inset: 0, opacity: 0.03, backgroundImage: `linear-gradient(rgba(195,151,90,1) 1px, transparent 1px), linear-gradient(90deg, rgba(195,151,90,1) 1px, transparent 1px)`, backgroundSize: "60px 60px" }} />
       <div style={{ position: "absolute", top: "15%", right: "3%", width: 600, height: 600, background: `radial-gradient(circle, rgba(195,151,90,0.1) 0%, transparent 70%)`, pointerEvents: "none" }} />
-      <div style={{ maxWidth: 1200, margin: "0 auto", width: "100%", position: "relative", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 80, alignItems: "center" }}>
+      <div style={{ maxWidth: 1200, margin: "0 auto", width: "100%", position: "relative", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: isMobile ? 40 : 80, alignItems: "center" }}>
         <div>
           <FadeIn>
             <div style={{ color: gold, fontSize: 11, letterSpacing: 4, fontFamily: sans, marginBottom: 24, textTransform: "uppercase" }}>{t.heroEyebrow}</div>
           </FadeIn>
           <FadeIn delay={100}>
-            <h1 style={{ fontFamily: sans, fontSize: "clamp(44px,5.5vw,76px)", fontWeight: 900, lineHeight: 1.02, color: cream, margin: "0 0 24px", letterSpacing: -2.5 }}>
+            <h1 style={{ fontFamily: sans, fontSize: isMobile ? "clamp(38px,10vw,52px)" : "clamp(44px,5.5vw,76px)", fontWeight: 900, lineHeight: 1.02, color: cream, margin: "0 0 24px", letterSpacing: -2 }}>
               {t.heroH1a}<br /><span style={{ color: gold }}>{t.heroH1b}</span>
             </h1>
           </FadeIn>
           <FadeIn delay={200}>
-            <p style={{ color: "#888", fontSize: 17, lineHeight: 1.75, fontFamily: sans, margin: "0 0 40px", maxWidth: 500 }}>{t.heroSub}</p>
+            <p style={{ color: "#888", fontSize: isMobile ? 15 : 17, lineHeight: 1.75, fontFamily: sans, margin: "0 0 40px", maxWidth: 500 }}>{t.heroSub}</p>
           </FadeIn>
           <FadeIn delay={300}>
             <div style={{ display: "flex", gap: 14, flexWrap: "wrap", marginBottom: 52 }}>
@@ -238,19 +284,21 @@ function Hero({ t }) {
             </div>
           </FadeIn>
           <FadeIn delay={400}>
-            <div style={{ display: "flex", gap: 44 }}>
+            <div style={{ display: "flex", gap: isMobile ? 28 : 44, flexWrap: "wrap" }}>
               {[[t.stat1val, t.stat1label],[t.stat2val, t.stat2label],[t.stat3val, t.stat3label]].map(([v,l]) => (
                 <div key={l}>
-                  <div style={{ color: gold, fontSize: 30, fontWeight: 900, fontFamily: sans, letterSpacing: -1 }}>{v}</div>
+                  <div style={{ color: gold, fontSize: isMobile ? 24 : 30, fontWeight: 900, fontFamily: sans, letterSpacing: -1 }}>{v}</div>
                   <div style={{ color: "#444", fontSize: 11, letterSpacing: 2, fontFamily: sans, textTransform: "uppercase", marginTop: 2 }}>{l}</div>
                 </div>
               ))}
             </div>
           </FadeIn>
         </div>
-        <FadeIn delay={200} style={{ display: "flex", justifyContent: "center" }}>
-          <img src={M_LOGO} alt="Mustafa Services" style={{ width: "min(360px,38vw)", filter: `drop-shadow(0 0 80px rgba(195,151,90,0.25))`, animation: "float 6s ease-in-out infinite" }} />
-        </FadeIn>
+        {!isMobile && (
+          <FadeIn delay={200} style={{ display: "flex", justifyContent: "center" }}>
+            <img src={M_LOGO} alt="Mustafa Services" style={{ width: isTablet ? "min(260px,30vw)" : "min(360px,38vw)", filter: `drop-shadow(0 0 80px rgba(195,151,90,0.25))`, animation: "float 6s ease-in-out infinite" }} />
+          </FadeIn>
+        )}
       </div>
       <style>{`@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-18px)}}`}</style>
     </section>
@@ -259,21 +307,23 @@ function Hero({ t }) {
 
 // ─── WHY SERBIA ──────────────────────────────────────────────────────────────
 function WhySection({ t }) {
+  const { isMobile, isTablet } = useBreakpoint();
+  const cols = isMobile ? "1fr" : isTablet ? "repeat(2,1fr)" : "repeat(3,1fr)";
   return (
-    <section id="warum" style={{ background: "#0c0c0c", padding: "120px 5vw" }}>
+    <section id="warum" style={{ background: "#0c0c0c", padding: isMobile ? "80px 5vw" : "120px 5vw" }}>
       <div style={{ maxWidth: 1200, margin: "0 auto" }}>
         <FadeIn>
-          <div style={{ textAlign: "center", marginBottom: 72 }}>
+          <div style={{ textAlign: "center", marginBottom: isMobile ? 48 : 72 }}>
             <div style={{ color: gold, fontSize: 11, letterSpacing: 4, fontFamily: sans, marginBottom: 14, textTransform: "uppercase" }}>{t.whyEyebrow}</div>
-            <h2 style={{ fontFamily: sans, fontSize: "clamp(30px,4vw,52px)", fontWeight: 800, color: cream, margin: 0, letterSpacing: -1.2 }}>
+            <h2 style={{ fontFamily: sans, fontSize: "clamp(28px,4vw,52px)", fontWeight: 800, color: cream, margin: 0, letterSpacing: -1.2 }}>
               {t.whyH2.split("\n").map((line, i) => <span key={i}>{line}{i === 0 && <br />}</span>)}
             </h2>
           </div>
         </FadeIn>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 1, background: "#1a1a1a" }}>
+        <div style={{ display: "grid", gridTemplateColumns: cols, gap: 1, background: "#1a1a1a" }}>
           {t.whyPoints.map((p, i) => (
             <FadeIn key={p.title} delay={i * 70}>
-              <div style={{ padding: "40px 32px", background: "#0c0c0c", cursor: "default", transition: "background 0.3s" }}
+              <div style={{ padding: isMobile ? "28px 24px" : "40px 32px", background: "#0c0c0c", cursor: "default", transition: "background 0.3s" }}
                 onMouseEnter={e => e.currentTarget.style.background = "#121208"}
                 onMouseLeave={e => e.currentTarget.style.background = "#0c0c0c"}>
                 <div style={{ fontSize: 30, marginBottom: 14 }}>{p.icon}</div>
@@ -290,19 +340,20 @@ function WhySection({ t }) {
 
 // ─── SERVICES ────────────────────────────────────────────────────────────────
 function ServicesSection({ t }) {
+  const { isMobile } = useBreakpoint();
   return (
-    <section id="leistungen" style={{ background: bg, padding: "120px 5vw" }}>
+    <section id="leistungen" style={{ background: bg, padding: isMobile ? "80px 5vw" : "120px 5vw" }}>
       <div style={{ maxWidth: 1200, margin: "0 auto" }}>
         <FadeIn>
-          <div style={{ marginBottom: 72 }}>
+          <div style={{ marginBottom: isMobile ? 48 : 72 }}>
             <div style={{ color: gold, fontSize: 11, letterSpacing: 4, fontFamily: sans, marginBottom: 14, textTransform: "uppercase" }}>{t.servEyebrow}</div>
-            <h2 style={{ fontFamily: sans, fontSize: "clamp(30px,4vw,52px)", fontWeight: 800, color: cream, margin: 0, letterSpacing: -1.2 }}>{t.servH2}</h2>
+            <h2 style={{ fontFamily: sans, fontSize: "clamp(28px,4vw,52px)", fontWeight: 800, color: cream, margin: 0, letterSpacing: -1.2 }}>{t.servH2}</h2>
           </div>
         </FadeIn>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: 20 }}>
+        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(2,1fr)", gap: 20 }}>
           {t.services.map((s, i) => (
             <FadeIn key={s.title} delay={i * 90}>
-              <div style={{ padding: "44px 40px", background: surface, border: "1px solid #1d1d1d", borderRadius: 2, position: "relative", overflow: "hidden", transition: "border-color 0.3s, transform 0.3s", cursor: "default" }}
+              <div style={{ padding: isMobile ? "32px 24px" : "44px 40px", background: surface, border: "1px solid #1d1d1d", borderRadius: 2, position: "relative", overflow: "hidden", transition: "border-color 0.3s, transform 0.3s", cursor: "default" }}
                 onMouseEnter={e => { e.currentTarget.style.borderColor = `rgba(195,151,90,0.35)`; e.currentTarget.style.transform = "translateY(-4px)"; }}
                 onMouseLeave={e => { e.currentTarget.style.borderColor = "#1d1d1d"; e.currentTarget.style.transform = "translateY(0)"; }}>
                 <div style={{ position: "absolute", top: -16, right: -16, fontSize: 88, opacity: 0.035, pointerEvents: "none" }}>{s.icon}</div>
@@ -321,20 +372,24 @@ function ServicesSection({ t }) {
 
 // ─── PROCESS ─────────────────────────────────────────────────────────────────
 function ProcessSection({ t }) {
+  const { isMobile, isTablet } = useBreakpoint();
+  const cols = isMobile ? "repeat(2,1fr)" : isTablet ? "repeat(2,1fr)" : "repeat(4,1fr)";
   return (
-    <section id="ablauf" style={{ background: "#0c0c0c", padding: "120px 5vw" }}>
+    <section id="ablauf" style={{ background: "#0c0c0c", padding: isMobile ? "80px 5vw" : "120px 5vw" }}>
       <div style={{ maxWidth: 1200, margin: "0 auto" }}>
         <FadeIn>
-          <div style={{ textAlign: "center", marginBottom: 80 }}>
+          <div style={{ textAlign: "center", marginBottom: isMobile ? 48 : 80 }}>
             <div style={{ color: gold, fontSize: 11, letterSpacing: 4, fontFamily: sans, marginBottom: 14, textTransform: "uppercase" }}>{t.processEyebrow}</div>
-            <h2 style={{ fontFamily: sans, fontSize: "clamp(30px,4vw,52px)", fontWeight: 800, color: cream, margin: 0, letterSpacing: -1.2 }}>{t.processH2}</h2>
+            <h2 style={{ fontFamily: sans, fontSize: "clamp(28px,4vw,52px)", fontWeight: 800, color: cream, margin: 0, letterSpacing: -1.2 }}>{t.processH2}</h2>
           </div>
         </FadeIn>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 0, position: "relative" }}>
-          <div style={{ position: "absolute", top: 31, left: "12.5%", right: "12.5%", height: 1, background: `linear-gradient(90deg,transparent,rgba(195,151,90,0.25) 20%,rgba(195,151,90,0.25) 80%,transparent)` }} />
+        <div style={{ display: "grid", gridTemplateColumns: cols, gap: isMobile ? 32 : 0, position: "relative" }}>
+          {!isMobile && !isTablet && (
+            <div style={{ position: "absolute", top: 31, left: "12.5%", right: "12.5%", height: 1, background: `linear-gradient(90deg,transparent,rgba(195,151,90,0.25) 20%,rgba(195,151,90,0.25) 80%,transparent)` }} />
+          )}
           {t.steps.map((s, i) => (
             <FadeIn key={s.num} delay={i * 110}>
-              <div style={{ padding: "0 20px", textAlign: "center" }}>
+              <div style={{ padding: isMobile ? "0 12px" : "0 20px", textAlign: "center" }}>
                 <div style={{ width: 62, height: 62, borderRadius: "50%", border: `1px solid rgba(195,151,90,0.35)`, background: "#0c0c0c", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 26px", position: "relative" }}>
                   <span style={{ color: gold, fontWeight: 800, fontSize: 13, fontFamily: sans }}>{s.num}</span>
                 </div>
@@ -385,10 +440,11 @@ function ContactSection({ t }) {
   const [email, setEmail] = useState("");
   const [msg, setMsg] = useState("");
   const [sent, setSent] = useState(false);
+  const { isMobile } = useBreakpoint();
   const inp = { width: "100%", background: surface, border: "1px solid #222", color: cream, padding: "14px 16px", borderRadius: 4, fontFamily: sans, fontSize: 14, outline: "none", boxSizing: "border-box", transition: "border-color 0.25s" };
   return (
-    <section id="kontakt" style={{ background: "#0c0c0c", padding: "120px 5vw" }}>
-      <div style={{ maxWidth: 1200, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 80, alignItems: "start" }}>
+    <section id="kontakt" style={{ background: "#0c0c0c", padding: isMobile ? "80px 5vw" : "120px 5vw" }}>
+      <div style={{ maxWidth: 1200, margin: "0 auto", display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: isMobile ? 48 : 80, alignItems: "start" }}>
         <FadeIn>
           <div>
             <div style={{ color: gold, fontSize: 11, letterSpacing: 4, fontFamily: sans, marginBottom: 16, textTransform: "uppercase" }}>{t.contactEyebrow}</div>
