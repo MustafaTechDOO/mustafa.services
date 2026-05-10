@@ -177,10 +177,16 @@ export default function KaufenPage() {
   const revolutReady = useRevolutScript();
   const navigate = useNavigate();
 
-  // Destroy old widget when switching products
+  // Mount widget after panel renders (widgetRef is only in DOM when activeProduct is set)
   useEffect(() => {
-    return () => { if (checkoutInstance) checkoutInstance.destroy(); };
-  }, [checkoutInstance]);
+    if (!checkoutInstance || !widgetRef.current) return;
+    checkoutInstance.payWithWidget({
+      target: widgetRef.current,
+      onSuccess() { navigate("/danke"); },
+      onError(msg) { setError("Zahlung fehlgeschlagen: " + (msg || "Unbekannter Fehler")); setActiveProduct(null); },
+      onCancel() { setActiveProduct(null); checkoutInstance.destroy(); setCheckoutInstance(null); },
+    });
+  }, [checkoutInstance]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleBuy = useCallback(async (productId) => {
     if (!revolutReady) { setError("Checkout wird noch geladen. Bitte kurz warten."); return; }
@@ -199,24 +205,14 @@ export default function KaufenPage() {
       if (!res.ok || !data.publicId) throw new Error(data.error || "Order konnte nicht erstellt werden.");
 
       const checkout = await window.RevolutCheckout(data.publicId, "prod");
-      setCheckoutInstance(checkout);
-
-      // Small delay so the widget container is in the DOM
-      setTimeout(() => {
-        checkout.payWithWidget({
-          target: widgetRef.current,
-          onSuccess() { navigate("/danke"); },
-          onError(msg) { setError("Zahlung fehlgeschlagen: " + (msg || "Unbekannter Fehler")); setActiveProduct(null); },
-          onCancel() { setActiveProduct(null); checkout.destroy(); },
-        });
-      }, 50);
+      setCheckoutInstance(checkout); // triggers useEffect above after re-render
     } catch (err) {
       setError(err.message);
       setActiveProduct(null);
     } finally {
       setLoading(null);
     }
-  }, [revolutReady, navigate, checkoutInstance]);
+  }, [revolutReady, checkoutInstance]);
 
   return (
     <div style={{ background: bg, minHeight: "100vh", fontFamily: sans }}>
