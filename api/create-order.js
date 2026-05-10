@@ -43,10 +43,11 @@ export default async function handler(req, res) {
     amount: product.amount,
     currency: product.currency,
     description: product.description,
+    redirect_url: "https://mustafa-services.com/danke",
   };
 
   try {
-    const revolut = await fetch("https://merchant.revolut.com/api/1.0/orders", {
+    const revolut = await fetch("https://merchant.revolut.com/orders", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${process.env.REVOLUT_SECRET_KEY}`,
@@ -69,13 +70,13 @@ export default async function handler(req, res) {
       });
     }
 
-    if (!data.public_id) {
-      console.error("No public_id in response", data);
+    if (!data.id) {
+      console.error("No id in response", data);
       return res.status(500).json({ error: "Invalid Revolut response", details: data });
     }
 
     return res.status(200).json({
-      publicId: data.public_id,
+      publicId: data.id,
       orderId: data.id,
       checkoutUrl: data.checkout_url,
     });
