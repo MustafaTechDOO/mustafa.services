@@ -1,5 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useCallback } from "react";
 
 const gold = "#c3975a";
 const cream = "#EDEAE3";
@@ -168,31 +167,16 @@ function ProductCard({ product, onBuy, loading }) {
   );
 }
 
+const BASE_URL = "https://mustafa-services.com";
+
 export default function KaufenPage() {
   const [loading, setLoading] = useState(null);
   const [error, setError] = useState(null);
-  const [activeProduct, setActiveProduct] = useState(null);
-  const [checkoutInstance, setCheckoutInstance] = useState(null);
-  const widgetRef = useRef(null);
   const revolutReady = useRevolutScript();
-  const navigate = useNavigate();
-
-  // Mount widget after panel renders (widgetRef is only in DOM when activeProduct is set)
-  useEffect(() => {
-    if (!checkoutInstance || !widgetRef.current) return;
-    checkoutInstance.payWithWidget({
-      target: widgetRef.current,
-      onSuccess() { navigate("/danke"); },
-      onError(msg) { setError("Zahlung fehlgeschlagen: " + (msg || "Unbekannter Fehler")); setActiveProduct(null); },
-      onCancel() { setActiveProduct(null); checkoutInstance.destroy(); setCheckoutInstance(null); },
-    });
-  }, [checkoutInstance]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleBuy = useCallback(async (productId) => {
     if (!revolutReady) { setError("Checkout wird noch geladen. Bitte kurz warten."); return; }
-    if (checkoutInstance) { checkoutInstance.destroy(); setCheckoutInstance(null); }
     setLoading(productId);
-    setActiveProduct(productId);
     setError(null);
 
     try {
@@ -205,14 +189,16 @@ export default function KaufenPage() {
       if (!res.ok || !data.publicId) throw new Error(data.error || "Order konnte nicht erstellt werden.");
 
       const checkout = await window.RevolutCheckout(data.publicId, "prod");
-      setCheckoutInstance(checkout); // triggers useEffect above after re-render
+      checkout.payWithRedirect({
+        successUrl: `${BASE_URL}/danke`,
+        cancelUrl:  `${BASE_URL}/kaufen`,
+        failUrl:    `${BASE_URL}/kaufen?error=1`,
+      });
     } catch (err) {
       setError(err.message);
-      setActiveProduct(null);
-    } finally {
       setLoading(null);
     }
-  }, [revolutReady, checkoutInstance]);
+  }, [revolutReady]);
 
   return (
     <div style={{ background: bg, minHeight: "100vh", fontFamily: sans }}>
@@ -262,30 +248,6 @@ export default function KaufenPage() {
             <ProductCard key={p.id} product={p} onBuy={handleBuy} loading={loading} />
           ))}
         </div>
-
-        {/* Inline checkout widget */}
-        {activeProduct && (
-          <div style={{ maxWidth: 560, margin: "0 auto 60px", padding: "0 5vw" }}>
-            <div style={{
-              background: surface, border: `1px solid rgba(195,151,90,0.3)`,
-              borderRadius: 6, overflow: "hidden",
-            }}>
-              <div style={{ padding: "20px 24px 16px", borderBottom: "1px solid #1a1a1a", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <div>
-                  <div style={{ color: cream, fontFamily: sans, fontWeight: 700, fontSize: 16 }}>
-                    {PRODUCTS.find(p => p.id === activeProduct)?.title}
-                  </div>
-                  <div style={{ color: gold, fontFamily: sans, fontSize: 13, marginTop: 2 }}>
-                    {formatRSD(PRODUCTS.find(p => p.id === activeProduct)?.priceRSD)} · {formatEUR(PRODUCTS.find(p => p.id === activeProduct)?.priceRSD)}
-                  </div>
-                </div>
-                <button onClick={() => { setActiveProduct(null); if (checkoutInstance) checkoutInstance.destroy(); }}
-                  style={{ background: "none", border: "none", color: muted, cursor: "pointer", fontSize: 20, lineHeight: 1 }}>×</button>
-              </div>
-              <div ref={widgetRef} style={{ minHeight: 200 }} />
-            </div>
-          </div>
-        )}
 
         {/* Error */}
         {error && (
