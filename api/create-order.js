@@ -47,7 +47,7 @@ module.exports = async function handler(req, res) {
   };
 
   try {
-    const revolut = await fetch("https://merchant.revolut.com/orders", {
+    const revolut = await fetch("https://merchant.revolut.com/api/1.0/orders", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${process.env.REVOLUT_SECRET_KEY}`,
