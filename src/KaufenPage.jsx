@@ -218,7 +218,7 @@ export default function KaufenPage() {
         <div style={{ maxWidth: 1200, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", height: 72 }}>
           <a href="/" style={{ display: "flex", alignItems: "center", gap: 12, textDecoration: "none" }}>
             <span style={{ fontFamily: sans, fontWeight: 700, fontSize: 20, color: cream, letterSpacing: -0.5 }}>
-              Mustafa<span style={{ color: gold }}>.</span>Services
+              Mustafa<span style={{ color: gold }}>-</span>Services
             </span>
           </a>
           <a href="/" style={{ color: muted, fontFamily: sans, fontSize: 13, textDecoration: "none" }}>

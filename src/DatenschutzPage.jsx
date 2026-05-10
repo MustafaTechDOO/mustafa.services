@@ -34,7 +34,7 @@ export default function DatenschutzPage() {
       }}>
         <div style={{ maxWidth: 1200, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", height: 72 }}>
           <a href="/" style={{ fontFamily: sans, fontWeight: 700, fontSize: 20, color: cream, letterSpacing: -0.5, textDecoration: "none" }}>
-            Mustafa<span style={{ color: gold }}>.</span>Services
+            Mustafa<span style={{ color: gold }}>-</span>Services
           </a>
           <a href="/" style={{ color: muted, fontFamily: sans, fontSize: 13, textDecoration: "none" }}>← Zurück</a>
         </div>
@@ -56,9 +56,9 @@ export default function DatenschutzPage() {
             Verantwortlicher im Sinne der DSGVO ist:
           </P>
           <P>
-            <strong style={{ color: cream }}>Mustafa.Services</strong><br />
+            <strong style={{ color: cream }}>Mustafa-Services.com</strong><br />
             Belgrad, Serbien<br />
-            E-Mail: <a href="mailto:info@mustafa.services" style={{ color: gold, textDecoration: "none" }}>info@mustafa.services</a>
+            E-Mail: <a href="mailto:mustafa@mustafa-services.com" style={{ color: gold, textDecoration: "none" }}>mustafa@mustafa-services.com</a>
           </P>
         </Section>
 
@@ -129,7 +129,7 @@ export default function DatenschutzPage() {
             </P>
           ))}
           <P>
-            Zur Ausübung Ihrer Rechte wenden Sie sich an: <a href="mailto:info@mustafa.services" style={{ color: gold, textDecoration: "none" }}>info@mustafa.services</a>
+            Zur Ausübung Ihrer Rechte wenden Sie sich an: <a href="mailto:mustafa@mustafa-services.com" style={{ color: gold, textDecoration: "none" }}>mustafa@mustafa-services.com</a>
           </P>
           <P>
             Sie haben außerdem das Recht, sich bei einer Datenschutz-Aufsichtsbehörde zu beschweren.
@@ -146,7 +146,7 @@ export default function DatenschutzPage() {
       {/* Footer */}
       <footer style={{ borderTop: "1px solid #111", padding: "32px 5vw" }}>
         <div style={{ maxWidth: 1200, margin: "0 auto", display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
-          <span style={{ fontFamily: sans, fontSize: 13, color: "#2e2e2e" }}>© {new Date().getFullYear()} Mustafa.Services</span>
+          <span style={{ fontFamily: sans, fontSize: 13, color: "#2e2e2e" }}>© {new Date().getFullYear()} Mustafa-Services.com</span>
           <a href="/kaufen" style={{ fontFamily: sans, fontSize: 13, color: gold, textDecoration: "none" }}>Preise & Buchung</a>
         </div>
       </footer>

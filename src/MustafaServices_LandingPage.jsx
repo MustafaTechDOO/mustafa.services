@@ -55,7 +55,7 @@ const T = {
     contactEyebrow: "KONTAKT",
     contactH2: "Bereit für\nIhren Neustart?",
     contactSub: "Buchen Sie ein kostenloses 30-minütiges Erstgespräch. Wir analysieren Ihre Situation und zeigen Ihnen den schnellsten Weg nach Serbien.",
-    contactInfo: [["📧", "info@mustafa.services"], ["📱", "WhatsApp auf Anfrage"], ["📍", "Belgrad, Serbien"]],
+    contactInfo: [["📧", "mustafa@mustafa-services.com"], ["📱", "WhatsApp auf Anfrage"], ["📍", "Belgrad, Serbien"]],
     inputName: "Ihr Name",
     inputEmail: "Ihre E-Mail",
     inputMsg: "Ihre Nachricht (optional)",
@@ -115,7 +115,7 @@ const T = {
     contactEyebrow: "CONTACT",
     contactH2: "Ready for your\nfresh start?",
     contactSub: "Book a free 30-minute consultation. We'll analyse your situation and show you the fastest path to Serbia.",
-    contactInfo: [["📧", "info@mustafa.services"], ["📱", "WhatsApp on request"], ["📍", "Belgrade, Serbia"]],
+    contactInfo: [["📧", "mustafa@mustafa-services.com"], ["📱", "WhatsApp on request"], ["📍", "Belgrade, Serbia"]],
     inputName: "Your Name",
     inputEmail: "Your Email",
     inputMsg: "Your Message (optional)",
@@ -205,7 +205,7 @@ function Navbar({ t, lang, setLang }) {
         <a href="#top" style={{ display: "flex", alignItems: "center", gap: 12, textDecoration: "none" }}>
           <img src={M_LOGO} alt="M" style={{ height: 42, width: 42, objectFit: "contain" }} />
           <span style={{ fontFamily: sans, fontWeight: 700, fontSize: 20, color: cream, letterSpacing: -0.5 }}>
-            Mustafa<span style={{ color: gold }}>.</span>Services
+            Mustafa<span style={{ color: gold }}>-</span>Services
           </span>
         </a>
         {isNavMobile ? (
@@ -513,10 +513,10 @@ function Footer({ t }) {
       <div style={{ maxWidth: 1200, margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 16 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <img src={M_LOGO} alt="M" style={{ height: 30, width: 30, objectFit: "contain" }} />
-          <span style={{ fontFamily: sans, fontWeight: 700, fontSize: 15, color: cream }}>Mustafa<span style={{ color: gold }}>.</span>Services</span>
+          <span style={{ fontFamily: sans, fontWeight: 700, fontSize: 15, color: cream }}>Mustafa<span style={{ color: gold }}>-</span>Services</span>
         </div>
         <div style={{ color: "#333", fontFamily: sans, fontSize: 11, letterSpacing: 2 }}>{t.footerTagline}</div>
-        <div style={{ color: "#2e2e2e", fontFamily: sans, fontSize: 11 }}>© {new Date().getFullYear()} Mustafa.Services</div>
+        <div style={{ color: "#2e2e2e", fontFamily: sans, fontSize: 11 }}>© {new Date().getFullYear()} Mustafa-Services.com</div>
       </div>
     </footer>
   );

@@ -3,22 +3,22 @@ const PRODUCTS = {
   firma: {
     amount: 37140800, // 371.408 RSD × 100
     currency: "RSD",
-    description: "Firmengründung d.o.o. – Mustafa.Services",
+    description: "Firmengründung d.o.o. – Mustafa-Services.com",
   },
   aufenthalt: {
     amount: 16389900, // 163.899 RSD × 100
     currency: "RSD",
-    description: "Aufenthaltstitel Serbien – Mustafa.Services",
+    description: "Aufenthaltstitel Serbien – Mustafa-Services.com",
   },
   shareholder: {
     amount: 4388700, // 43.887 RSD × 100
     currency: "RSD",
-    description: "Additional Shareholder – Mustafa.Services",
+    description: "Additional Shareholder – Mustafa-Services.com",
   },
   paket: {
     amount: 48664200, // 486.642 RSD × 100
     currency: "RSD",
-    description: "Gesamtpaket (Firma + Aufenthaltstitel) – Mustafa.Services",
+    description: "Gesamtpaket (Firma + Aufenthaltstitel) – Mustafa-Services.com",
   },
 };
 
