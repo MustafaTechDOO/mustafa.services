@@ -34,7 +34,7 @@ module.exports = async function handler(req, res) {
       },
       body: JSON.stringify({
         from: "Mustafa-Services <onboarding@resend.dev>",
-        to: ["mustafa@mustafa-services.com"],
+        to: ["mustafa@mustafa.group"],
         reply_to: email,
         subject: `Neue Anfrage von ${name}`,
         html,
@@ -44,7 +44,7 @@ module.exports = async function handler(req, res) {
     const data = await r.json();
     if (!r.ok) {
       console.error("Resend error", r.status, data);
-      return res.status(500).json({ error: "E-Mail konnte nicht gesendet werden.", resend: data });
+      return res.status(500).json({ error: "E-Mail konnte nicht gesendet werden." });
     }
 
     return res.status(200).json({ ok: true });

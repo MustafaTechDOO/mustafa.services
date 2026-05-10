@@ -55,7 +55,7 @@ module.exports = async function handler(req, res) {
         },
         body: JSON.stringify({
           from: "Mustafa-Services <onboarding@resend.dev>",
-          to: ["mustafa@mustafa-services.com"],
+          to: ["mustafa@mustafa.group"],
           subject: `✅ Zahlung ${amountFormatted} – ${description}`,
           html,
         }),
