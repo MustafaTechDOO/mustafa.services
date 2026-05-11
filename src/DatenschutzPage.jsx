@@ -95,7 +95,19 @@ export default function DatenschutzPage() {
           </P>
         </Section>
 
-        <Section title="5. Zahlungsabwicklung (Revolut)">
+        <Section title="5. Meta Pixel (Facebook)">
+          <P>
+            Diese Website verwendet den <strong style={{ color: cream }}>Meta Pixel</strong> (Pixel-ID: 1358191182816696) der Meta Platforms Ireland Ltd., 4 Grand Canal Square, Dublin 2, Irland – <strong>nur nach Ihrer ausdrücklichen Einwilligung</strong>.
+          </P>
+          <P>
+            Der Meta Pixel ermöglicht die Erfassung von Seitenaufrufen und Interaktionen für Werbezwecke auf Facebook und Instagram. Dabei können Daten (anonymisierte IP, Browserinformationen, Seitenaufrufe) an Meta-Server in den USA übertragen werden.
+          </P>
+          <P>
+            Rechtsgrundlage: Art. 6 Abs. 1 lit. a DSGVO (Einwilligung). Datentransfer in die USA erfolgt auf Basis des EU-US Data Privacy Framework. Weitere Informationen: <a href="https://www.facebook.com/privacy/policy" target="_blank" rel="noopener noreferrer" style={{ color: gold, textDecoration: "none" }}>facebook.com/privacy/policy</a>
+          </P>
+        </Section>
+
+        <Section title="6. Zahlungsabwicklung (Revolut)">
           <P>
             Zahlungen werden über <strong style={{ color: cream }}>Revolut Ltd.</strong>, 7 Westferry Circus, Canary Wharf, London E14 4HD, Vereinigtes Königreich, abgewickelt.
           </P>
@@ -107,13 +119,13 @@ export default function DatenschutzPage() {
           </P>
         </Section>
 
-        <Section title="6. Kontaktformular">
+        <Section title="7. Kontaktformular">
           <P>
             Wenn Sie das Kontaktformular nutzen, werden die eingegebenen Daten (Name, E-Mail, Nachricht) zur Bearbeitung Ihrer Anfrage verarbeitet. Rechtsgrundlage: Art. 6 Abs. 1 lit. b DSGVO. Die Daten werden nicht an Dritte weitergegeben und nach Abschluss der Korrespondenz gelöscht.
           </P>
         </Section>
 
-        <Section title="7. Ihre Rechte">
+        <Section title="8. Ihre Rechte">
           <P>Sie haben folgende Rechte gegenüber uns bezüglich Ihrer personenbezogenen Daten:</P>
           {[
             ["Auskunft", "Art. 15 DSGVO – Welche Daten wir über Sie gespeichert haben"],
@@ -136,7 +148,7 @@ export default function DatenschutzPage() {
           </P>
         </Section>
 
-        <Section title="8. Datensicherheit">
+        <Section title="9. Datensicherheit">
           <P>
             Die Übertragung erfolgt ausschließlich über HTTPS (SSL/TLS-Verschlüsselung). Wir treffen technische und organisatorische Maßnahmen zum Schutz Ihrer Daten gemäß Art. 32 DSGVO.
           </P>

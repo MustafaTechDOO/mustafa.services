@@ -3,16 +3,15 @@ import { useState, useEffect } from "react";
 const gold = "#c3975a";
 const sans = "'Helvetica Neue', Helvetica, Arial, sans-serif";
 const GA_ID = "G-D1T6PCGZ18";
+const META_PIXEL_ID = "1358191182816696";
 
 function loadGA() {
   if (window.__gaLoaded) return;
   window.__gaLoaded = true;
-
   const script = document.createElement("script");
   script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`;
   script.async = true;
   document.head.appendChild(script);
-
   window.dataLayer = window.dataLayer || [];
   function gtag() { window.dataLayer.push(arguments); }
   window.gtag = gtag;
@@ -20,10 +19,26 @@ function loadGA() {
   gtag("config", GA_ID);
 }
 
+function loadMetaPixel() {
+  if (window.__metaPixelLoaded) return;
+  window.__metaPixelLoaded = true;
+  !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+  window.fbq('init', META_PIXEL_ID);
+  window.fbq('track', 'PageView');
+  const noscript = document.createElement("noscript");
+  noscript.innerHTML = `<img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=${META_PIXEL_ID}&ev=PageView&noscript=1" />`;
+  document.head.appendChild(noscript);
+}
+
+function loadAll() {
+  loadGA();
+  loadMetaPixel();
+}
+
 export function useAnalyticsConsent() {
   useEffect(() => {
     if (localStorage.getItem("cookie_consent") === "accepted") {
-      loadGA();
+      loadAll();
     }
   }, []);
 }
@@ -39,7 +54,7 @@ export default function CookieBanner() {
 
   function accept() {
     localStorage.setItem("cookie_consent", "accepted");
-    loadGA();
+    loadAll();
     setVisible(false);
   }
 
@@ -64,7 +79,7 @@ export default function CookieBanner() {
       }}>
         <div style={{ flex: 1, minWidth: 260 }}>
           <p style={{ fontFamily: sans, fontSize: 13, color: "#888", margin: 0, lineHeight: 1.6 }}>
-            Diese Website verwendet Cookies für anonyme Nutzungsanalysen (Google Analytics).{" "}
+            Diese Website verwendet Cookies für Nutzungsanalysen (Google Analytics, Meta Pixel).{" "}
             Ihre Daten werden nicht verkauft.{" "}
             <a href="/datenschutz" style={{ color: gold, textDecoration: "none" }}>Datenschutz</a>
           </p>
